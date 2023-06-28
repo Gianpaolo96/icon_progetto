@@ -2,12 +2,12 @@
 import warnings
 import numpy as np
 import pandas as pd
-# Visualizzazione dati
+# Data Visualization
 import seaborn as sns
 import matplotlib.pyplot as plt
-# Pre-elaborazione
+# Pre-elaboration
 from sklearn.preprocessing import StandardScaler
-# Predizione
+# Prediction
 from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
@@ -20,19 +20,19 @@ from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
-# Cancella warnings
+# Delete warnings
 warnings.filterwarnings("ignore")
-# Importa tutti i dati dal dataset
+# Import all dataset data
 data = pd.read_csv('SpotifyFeatures.csv',encoding = "ISO-8859-1");
-# Definire set di predizione
+# Define prediction set
 x = data[['Beats.Per.Minute', 'Energy', 'Danceability', 'Loudness.dB', 'Liveness', 'Valence', 'Length', 'Acousticness', 'Speechiness']]
-# Definire variabile target
+# Define target variable
 y = data[['Popularity']]
-# Definire info variabili
+# Define info variables
 info = data[['Track.Name', 'Artist.Name', 'Genre']]
-# Correlazione Spearman
+# Spearman Correlation
 sc = pd.concat([x,y], axis=1).corr(method='spearman')
-# Generare una maschera per il triangolo superiore
+# Generate mask for upper triangle
 triangle_mask = np.zeros_like(sc, dtype=np.bool)
 triangle_mask[np.triu_indices_from(triangle_mask)] = True
 plt.figure(figsize = (25,10))
@@ -74,15 +74,15 @@ plt.figure(figsize = (25,10));
 sns.barplot(data=df,x='Genre',y='Popularity');
 plt.xticks(rotation=45, ha='right');
 plt.savefig('5.png', bbox_inches='tight')
-# Definire variabili
+# Define variables
 metricsRFR = []       # Prediction Scores for Random Forest Regressor
 metricsSVR = []       # Prediction Scores for Support Vector Regressor
 metricsKNR = []       # Prediction Scores for K Nearest Neighbours Regressor
 
-# Inizializza pre-elaborazione
+# pre-elaboration initialization
 ss = StandardScaler()
 
-# inizializza modelli
+# model initialization
 svr = SVR()
 rfr = RandomForestRegressor()
 knr = KNeighborsRegressor(n_neighbors=3)
@@ -292,6 +292,7 @@ for train_index, test_index in cv.split(x):
     df = pd.concat([df, y, info], axis=1)
     # A sample of our new dataframe
     df.head(3)
+    # the following code is in comment and it is used to generate the 3d plot
     # Plot 3D - KNN Clusters
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
