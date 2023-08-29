@@ -2,12 +2,12 @@
 import warnings
 import numpy as np
 import pandas as pd
-# Data Visualization
+# Visualizzazione dati
 import seaborn as sns
 import matplotlib.pyplot as plt
-# Pre-elaboration
+# Pre-elaborazione
 from sklearn.preprocessing import StandardScaler
-# Prediction
+# Predizione
 from sklearn.model_selection import KFold
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
@@ -20,19 +20,19 @@ from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 from sklearn.decomposition import PCA
-# Delete warnings
+# Cancella warnings
 warnings.filterwarnings("ignore")
-# Import all dataset data
+# Importa tutti i dati dal dataset
 data = pd.read_csv('SpotifyFeatures.csv',encoding = "ISO-8859-1");
-# Define prediction set
+# Definire set di predizione
 x = data[['Beats.Per.Minute', 'Energy', 'Danceability', 'Loudness.dB', 'Liveness', 'Valence', 'Length', 'Acousticness', 'Speechiness']]
-# Define target variable
+# Definire variabile target
 y = data[['Popularity']]
-# Define info variables
+# Definire info variabili
 info = data[['Track.Name', 'Artist.Name', 'Genre']]
-# Spearman Correlation
+# Correlazione Spearman
 sc = pd.concat([x,y], axis=1).corr(method='spearman')
-# Generate mask for upper triangle
+# Generare una maschera per il triangolo superiore
 triangle_mask = np.zeros_like(sc, dtype=np.bool)
 triangle_mask[np.triu_indices_from(triangle_mask)] = True
 plt.figure(figsize = (25,10))
@@ -74,23 +74,23 @@ plt.figure(figsize = (25,10));
 sns.barplot(data=df,x='Genre',y='Popularity');
 plt.xticks(rotation=45, ha='right');
 plt.savefig('5.png', bbox_inches='tight')
-# Define variables
+# Definire variabili
 metricsRFR = []       # Prediction Scores for Random Forest Regressor
 metricsSVR = []       # Prediction Scores for Support Vector Regressor
 metricsKNR = []       # Prediction Scores for K Nearest Neighbours Regressor
 
-# pre-elaboration initialization
+# Inizializza pre-elaborazione
 ss = StandardScaler()
 
-# model initialization
-svr = SVR()
-rfr = RandomForestRegressor()
-knr = KNeighborsRegressor(n_neighbors=3)
+# inizializza modelli
+svr = SVR(C=10, kernel='rbf')
+rfr = RandomForestRegressor(n_estimators=5, max_depth=2)
+knr = KNeighborsRegressor(n_neighbors=3, weights='uniform')
 
-# Cross-Validation 10 Fold
-cv = KFold(n_splits=10, random_state=1206, shuffle=True)
+# Cross-Validation 3 Fold
+cv = KFold(n_splits=3, random_state=1206, shuffle=True)
 
-# Loop into all 10 Folds
+# Loop into all 3 Folds
 for train_index, test_index in cv.split(x):
     # Define train and test to simplify our life
     x_train, x_test, y_train, y_test = x.loc[train_index,:], x.loc[test_index,:], y.loc[train_index,:], y.loc[test_index,:]
@@ -125,14 +125,14 @@ knrMSE = []           # Aux variable to keep MSE track for 3,4 and 5 features in
 ss = StandardScaler()
 
 # Models init
-svr = SVR()
-rfr = RandomForestRegressor()
-knr = KNeighborsRegressor(n_neighbors=3)
+svr = SVR(C=10, kernel='rbf')
+rfr = RandomForestRegressor(n_estimators=5, max_depth=2)
+knr = KNeighborsRegressor(n_neighbors=3, weights='uniform')
 
-# Cross-Validation 10 Fold
-cv = KFold(n_splits=10, random_state=1206, shuffle=True)
+# Cross-Validation 3 Fold
+cv = KFold(n_splits=3, random_state=1206, shuffle=True)
 
-# Loop into all 10 Folds
+# Loop into all 3 Folds
 for train_index, test_index in cv.split(x):
     # Define train and test to simplify our life
     x_train, x_test, y_train, y_test = x.loc[train_index,:], x.loc[test_index,:], y.loc[train_index,:], y.loc[test_index,:]
@@ -292,7 +292,6 @@ for train_index, test_index in cv.split(x):
     df = pd.concat([df, y, info], axis=1)
     # A sample of our new dataframe
     df.head(3)
-    # the following code is in comment and it is used to generate the 3d plot
     # Plot 3D - KNN Clusters
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
